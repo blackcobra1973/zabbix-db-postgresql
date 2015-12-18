@@ -1,0 +1,1 @@
+# zabbix-db-postgresql
