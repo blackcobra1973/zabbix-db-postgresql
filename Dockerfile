@@ -13,7 +13,7 @@ RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
 RUN rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm
 
 # Install Postgres Version 9.4
-RUN yum install postgresql94-server postgresql94 postgresql94-contrib postgresql94-plperl postgresql94-devel -y --nogpgcheck
+RUN yum install postgresql94-server postgresql94 postgresql94-contrib postgresql94-plperl postgresql94-devel -y --nogpgcheck; yum clean all
 
 # Modified setup script to bypass systemctl variable read stuff
 ADD ./container-files/postgresql94-setup /usr/pgsql-9.4/bin/postgresql94-setup
@@ -35,6 +35,8 @@ ADD ./container-files/etc/postgresql/pg_hba.conf /var/lib/pgsql/9.4/data/pg_hba.
 ADD ./container-files/start_postgres.sh /start_postgres.sh
 
 RUN chmod +x /start_postgres.sh
+
+VOLUME ["/var/lib/pgsql"]
 
 EXPOSE 5432
 
