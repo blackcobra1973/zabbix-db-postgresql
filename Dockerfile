@@ -9,8 +9,10 @@ ENV \
 RUN \
     yum -y update && \
     yum -y install epel-release && \
-    yum -y install sudo pwgen bind-utils bzip2 && \
+    yum -y install sudo pwgen bind-utils bzip2 supervisor && \
     yum clean all
+
+ADD ./container-files/supervisord.conf /etc/supervisord.conf
 
 #Sudo requires a tty. fix that.
 RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
