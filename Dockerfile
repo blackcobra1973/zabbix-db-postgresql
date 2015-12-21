@@ -9,7 +9,9 @@ ENV \
 RUN \
     yum -y update && \
     yum -y install epel-release && \
+    rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm && \
     yum -y install sudo pwgen bind-utils bzip2 supervisor psmisc && \
+    yum install postgresql94-server postgresql94 postgresql94-contrib postgresql94-plperl postgresql94-devel -y --nogpgcheck && \
     yum clean all
 
 ADD ./container-files/supervisord.conf /etc/supervisord.conf
@@ -18,10 +20,10 @@ ADD ./container-files/supervisord.conf /etc/supervisord.conf
 RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
 
 # Install pgdg repo for getting new postgres RPMs
-RUN rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm
+#RUN rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm
 
 # Install Postgres Version 9.4
-RUN yum install postgresql94-server postgresql94 postgresql94-contrib postgresql94-plperl postgresql94-devel -y --nogpgcheck; yum clean all
+#RUN yum install postgresql94-server postgresql94 postgresql94-contrib postgresql94-plperl postgresql94-devel -y --nogpgcheck; yum clean all
 
 # Update data folder perms
 RUN chown -R postgres.postgres /var/lib/pgsql
