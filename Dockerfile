@@ -9,7 +9,7 @@ ENV \
 RUN \
     yum -y update && \
     yum -y install epel-release && \
-    yum -y install sudo pwgen bind-utils bzip2 supervisor && \
+    yum -y install sudo pwgen bind-utils bzip2 supervisor psmisc && \
     yum clean all
 
 ADD ./container-files/supervisord.conf /etc/supervisord.conf

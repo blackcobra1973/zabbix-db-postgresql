@@ -1,15 +1,23 @@
 #!/bin/bash
-
-DB_INSTALLED=`sudo -u postgres psql -l | grep -c zabbix`
+echo "******CREATING ZABBIX DATABASE******"
 
 DB_NAME=${DB_NAME:="zabbix"}
 DB_USER=${DB_USER:="zabbix"}
 DB_PASS=${DB_PASS:-}
 PG_CONFDIR="/var/lib/pgsql/${PG_Version}/data"
+PG_BINDIR="/usr/pgsql-${PG_Version}/bin"
+
+echo "starting postgres"
+sudo -u postgres $PG_BINDIR/pg_ctl -w start
+
+DB_INSTALLED=`sudo -u postgres psql -l | grep -c zabbix`
 
 if [ $DB_INSTALLED ]
 then
   echo "Zabbix Database already exists, nothing to do in this script"
+  echo "stopping postgres"
+  sudo -u postgres $PG_BINDIR/pg_ctl stop
+  echo "stopped postgres"
   exit 0
 fi
 
@@ -33,7 +41,11 @@ fi
 
 if [ -n "${DB_NAME}" ]; then
   echo "Creating database \"${DB_NAME}\"..."
-  sudo -u postgres psql -c "CREATE DATABASE ${DB_NAME} WITH OWNER = '${DB_USER}';"
+  sudo -u postgres psql -c "CREATE DATABASE ${DB_NAME} WITH OWNER ='${DB_USER}' ENCODING='UTF8' lc_collate='en_US.UTF-8' lc_ctype='en_US.UTF-8' ;"
+fi
+if [ -n "${DB_USER}" ]; then
+  echo "Granting access to database \"${DB_NAME}\" for user \"${DB_USER}\"..."
+  sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ${DB_NAME} to ${DB_USER};"
 fi
 
 echo "  Populating the Database: ${DB_NAME}"
@@ -47,3 +59,6 @@ sudo -u postgres psql -U ${DB_USER} -d ${DB_NAME} -f /usr/local/tmp/zabbix_sql/0
 sudo -u postgres psql -U ${DB_USER} -d ${DB_NAME} -f /usr/local/tmp/zabbix_sql/03_create_triggers_for_tables.sql
 sudo -u postgres psql -U ${DB_USER} -d ${DB_NAME} -f /usr/local/tmp/zabbix_sql/04_create_remove_functions.sql
 
+echo "stopping postgres"
+sudo -u postgres $PG_BINDIR/pg_ctl stop
+echo "stopped postgres"
