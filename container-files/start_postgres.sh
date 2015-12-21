@@ -72,6 +72,12 @@ supervisord -n
 }
 
 # Call all functions
-__create_database
-__run_supervisor
+if [ $DEBUG ]
+then
+  __create_database 2>&1 | tee -a /tmp/create_database.log
+  __run_supervisor
+else
+  __create_database
+  __run_supervisor
+fi
 

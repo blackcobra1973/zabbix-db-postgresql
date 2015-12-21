@@ -4,7 +4,8 @@ FROM centos:centos7
 MAINTAINER Kurt Dillen <kurt.dillen@dls-belgium.com>
 
 ENV \
-  PG_Version=9.4
+  PG_Version=9.4 \
+  DEBUG=1
 
 RUN \
     yum -y update && \
@@ -54,4 +55,4 @@ VOLUME ["/var/lib/pgsql"]
 EXPOSE 5432
 
 #Run pgEngine
-CMD ["/start_postgres.sh > /tmp/start_postgres.log 2>&1"]
+CMD ["/start_postgres.sh"]
