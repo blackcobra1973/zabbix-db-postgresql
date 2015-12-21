@@ -5,7 +5,11 @@ MAINTAINER Kurt Dillen <kurt.dillen@dls-belgium.com>
 
 ENV \
   PG_Version=9.4 \
+  PGSETUP_INITDB_OPTIONS="-E UTF8" \
   DEBUG=1
+
+RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf
+RUN export LANG=en_US.UTF-8
 
 RUN \
     yum -y update && \
@@ -19,7 +23,6 @@ ADD ./container-files/supervisord.conf /etc/supervisord.conf
 
 #Sudo requires a tty. fix that.
 RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
-RUN /bin/localectl set-locale LANG=en_US.UTF-8
 
 # Install pgdg repo for getting new postgres RPMs
 #RUN rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm
