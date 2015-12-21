@@ -4,9 +4,7 @@ FROM centos:centos7
 MAINTAINER Kurt Dillen <kurt.dillen@dls-belgium.com>
 
 ENV \
-  PG_Version=9.4 \
-  PG_DB=zabbix \
-  PG_USER=zabbix \
+  PG_Version=9.4
 
 RUN \
     yum -y update && \
@@ -41,11 +39,16 @@ ADD ./container-files/etc/postgresql/pg_hba.conf /var/lib/pgsql/9.4/data/pg_hba.
 
 #Add start script for postgres
 ADD ./container-files/start_postgres.sh /start_postgres.sh
-
 RUN chmod +x /start_postgres.sh
 
-VOLUME ["/var/lib/pgsql"]
+## Add Zabbix related files
+RUN mkdir -p /usr/local/tmp/zabbix_sql
+ADD ./container-files/zabbix-db-setup.sh /usr/local/bin/zabbix-db-setup.sh
+ADD ./container-files/sql/* /usr/local/tmp/zabbix_sql
+ADD ./container-files/zabbix/* /tmp/
+RUN chmod +x /usr/local/bin/zabbix-db-setup.sh
 
+VOLUME ["/var/lib/pgsql"]
 EXPOSE 5432
 
 #Run pgEngine
