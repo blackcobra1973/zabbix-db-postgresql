@@ -43,7 +43,7 @@ fi
 
 if [ -n "${DB_NAME}" ]; then
   echo "Creating database \"${DB_NAME}\"..."
-  sudo -u postgres psql -c "CREATE DATABASE ${DB_NAME} WITH OWNER=${DB_USER} ENCODING=UTF8 lc_collate=en_US.UTF-8 lc_ctype=en_US.UTF-8 ;"
+  sudo -u postgres psql -c "CREATE DATABASE ${DB_NAME} WITH OWNER=${DB_USER} ENCODING='UTF8' lc_collate='en_US.UTF-8' lc_ctype='en_US.UTF-8';"
 fi
 if [ -n "${DB_USER}" ]; then
   echo "Granting access to database \"${DB_NAME}\" for user \"${DB_USER}\"..."
