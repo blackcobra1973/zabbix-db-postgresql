@@ -10,7 +10,7 @@ PG_CONFDIR="/var/lib/pgsql/${PG_Version}/data"
 PG_BINDIR="/usr/pgsql-${PG_Version}/bin"
 
 echo "starting postgres"
-sudo -u postgres $PG_BINDIR/pg_ctl -w start
+sudo -u postgres $PG_BINDIR/pg_ctl -w start -D $PG_CONFDIR
 
 DB_INSTALLED=`sudo -u postgres psql -l | grep -c zabbix`
 
@@ -18,7 +18,7 @@ if [ $DB_INSTALLED ]
 then
   echo "Zabbix Database already exists, nothing to do in this script"
   echo "stopping postgres"
-  sudo -u postgres $PG_BINDIR/pg_ctl stop
+  sudo -u postgres $PG_BINDIR/pg_ctl stop -D $PG_CONFDIR
   echo "stopped postgres"
   exit 0
 fi
@@ -62,7 +62,7 @@ sudo -u postgres psql -U ${DB_USER} -d ${DB_NAME} -f /usr/local/tmp/zabbix_sql/0
 sudo -u postgres psql -U ${DB_USER} -d ${DB_NAME} -f /usr/local/tmp/zabbix_sql/04_create_remove_functions.sql
 
 echo "stopping postgres"
-sudo -u postgres $PG_BINDIR/pg_ctl stop
+sudo -u postgres $PG_BINDIR/pg_ctl stop -D $PG_CONFDIR
 echo "stopped postgres"
 
 }
