@@ -44,7 +44,7 @@ RUN chmod +x /start_postgres.sh
 ## Add Zabbix related files
 RUN mkdir -p /usr/local/tmp/zabbix_sql
 ADD ./container-files/zabbix-db-setup.sh /usr/local/bin/zabbix-db-setup.sh
-ADD ./container-files/sql/* /usr/local/tmp/zabbix_sql
+ADD ./container-files/sql/* /usr/local/tmp/zabbix_sql/
 ADD ./container-files/zabbix/* /tmp/
 RUN chmod +x /usr/local/bin/zabbix-db-setup.sh
 
