@@ -10,7 +10,7 @@ RUN \
     yum -y update && \
     yum -y install epel-release && \
     yum -y install sudo pwgen bind-utils bzip2 && \
-    yum clean ll
+    yum clean all
 
 #Sudo requires a tty. fix that.
 RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
