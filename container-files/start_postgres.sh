@@ -14,7 +14,7 @@ sudo -u postgres $PG_BINDIR/pg_ctl -w start -D $PG_CONFDIR
 
 DB_INSTALLED=`sudo -u postgres psql -l | grep -c zabbix`
 
-if [ $DB_INSTALLED -eq 1 ]
+if [ $DB_INSTALLED -ne 0 ]
 then
   echo "Zabbix Database already exists, nothing to do in this script"
   echo "stopping postgres"
