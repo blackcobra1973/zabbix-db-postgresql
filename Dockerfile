@@ -4,22 +4,31 @@ FROM centos:centos7
 MAINTAINER Kurt Dillen <kurt.dillen@dls-belgium.com>
 
 ENV \
-  PG_Version=9.4
+  PG_Version=9.4 \
+  PGSETUP_INITDB_OPTIONS="-E UTF8 --locale='en_US.UTF-8'" \
+  DEBUG=1
+
+RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf
+RUN export LANG=en_US.UTF-8
 
 RUN \
     yum -y update && \
     yum -y install epel-release && \
-    yum -y install sudo pwgen bind-utils bzip2 && \
+    rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm && \
+    yum -y install sudo pwgen bind-utils bzip2 supervisor psmisc && \
+    yum install postgresql94-server postgresql94 postgresql94-contrib postgresql94-plperl postgresql94-devel -y --nogpgcheck && \
     yum clean all
+
+ADD ./container-files/supervisord.conf /etc/supervisord.conf
 
 #Sudo requires a tty. fix that.
 RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
 
 # Install pgdg repo for getting new postgres RPMs
-RUN rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm
+#RUN rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm
 
 # Install Postgres Version 9.4
-RUN yum install postgresql94-server postgresql94 postgresql94-contrib postgresql94-plperl postgresql94-devel -y --nogpgcheck; yum clean all
+#RUN yum install postgresql94-server postgresql94 postgresql94-contrib postgresql94-plperl postgresql94-devel -y --nogpgcheck; yum clean all
 
 # Update data folder perms
 RUN chown -R postgres.postgres /var/lib/pgsql
@@ -43,10 +52,8 @@ RUN chmod +x /start_postgres.sh
 
 ## Add Zabbix related files
 RUN mkdir -p /usr/local/tmp/zabbix_sql
-ADD ./container-files/zabbix-db-setup.sh /usr/local/bin/zabbix-db-setup.sh
 ADD ./container-files/sql/* /usr/local/tmp/zabbix_sql/
 ADD ./container-files/zabbix/* /tmp/
-RUN chmod +x /usr/local/bin/zabbix-db-setup.sh
 
 VOLUME ["/var/lib/pgsql"]
 EXPOSE 5432
