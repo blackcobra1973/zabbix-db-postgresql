@@ -5,7 +5,7 @@ MAINTAINER Kurt Dillen <kurt.dillen@dls-belgium.com>
 
 ENV \
   PG_Version=9.4 \
-  PGSETUP_INITDB_OPTIONS="-E UTF8" \
+  PGSETUP_INITDB_OPTIONS="-E UTF8 --locale='en_US.UTF-8'" \
   DEBUG=1
 
 RUN echo 'LANG="en_US.UTF-8"' > /etc/locale.conf
