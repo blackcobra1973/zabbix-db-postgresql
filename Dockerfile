@@ -23,19 +23,19 @@ RUN rpm -ivh http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.
 # Install Postgres Version 9.4
 RUN yum install postgresql94-server postgresql94 postgresql94-contrib postgresql94-plperl postgresql94-devel -y --nogpgcheck; yum clean all
 
-# Modified setup script to bypass systemctl variable read stuff
-ADD ./container-files/postgresql94-setup /usr/pgsql-9.4/bin/postgresql94-setup
-
 # Update data folder perms
 RUN chown -R postgres.postgres /var/lib/pgsql
 
+# Modified setup script to bypass systemctl variable read stuff
+ADD ./container-files/postgresql94-setup /tmp/postgresql94-setup
+
 #Modify perms on setup script
-RUN chmod +x /usr/pgsql-9.4/bin/postgresql94-setup
+RUN chmod +x /tmp/postgresql94-setup
 
 #Initialize data for pg engine
-RUN sh /usr/pgsql-9.4/bin/postgresql94-setup initdb
+RUN sh /tmp/postgresql94-setup initdb
 
-#Access from all over --- NEVER DO THIS SHIT IN POST DEV ENVs !!!!!!!!!!!!!!!!!!! <--- READ THIS
+### Default PostgreSQL configuration files
 ADD ./container-files/etc/postgresql/postgresql.conf /var/lib/pgsql/9.4/data/postgresql.conf
 ADD ./container-files/etc/postgresql/pg_hba.conf /var/lib/pgsql/9.4/data/pg_hba.conf
 
