@@ -27,13 +27,13 @@ RUN yum install postgresql94-server postgresql94 postgresql94-contrib postgresql
 RUN chown -R postgres.postgres /var/lib/pgsql
 
 # Modified setup script to bypass systemctl variable read stuff
-ADD ./container-files/postgresql94-setup /tmp/postgresql94-setup
+ADD ./container-files/postgresql94-setup /usr/pgsql-9.4/bin/postgresql94-setup
 
 #Modify perms on setup script
-RUN chmod +x /tmp/postgresql94-setup
+RUN chmod +x /usr/pgsql-9.4/bin/postgresql94-setup
 
 #Initialize data for pg engine
-RUN sh /tmp/postgresql94-setup initdb
+RUN sh /usr/pgsql-9.4/bin/postgresql94-setup initdb
 
 ### Default PostgreSQL configuration files
 ADD ./container-files/etc/postgresql/postgresql.conf /var/lib/pgsql/9.4/data/postgresql.conf
