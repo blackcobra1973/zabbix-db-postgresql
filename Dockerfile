@@ -3,8 +3,16 @@
 FROM centos:centos7
 MAINTAINER Kurt Dillen <kurt.dillen@dls-belgium.com>
 
-RUN yum -y update; yum clean all
-RUN yum -y install sudo epel-release; yum clean all
+ENV \
+  PG_Version=9.4 \
+  PG_DB=zabbix \
+  PG_USER=zabbix \
+
+RUN \
+    yum -y update && \
+    yum -y install epel-release && \
+    yum -y install sudo pwgen bind-utils bzip2 && \
+    yum clean ll
 
 #Sudo requires a tty. fix that.
 RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
