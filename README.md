@@ -3,7 +3,7 @@ zabbix-db-postgresql
 
 Dockerfile to build PostgreSQL on CentOS 7
 
-Features added: 
+Features added:
 
 - Zabbix DB for version 3.x
 - PostgreSQL automatic table partitioning for Zabbix
@@ -35,6 +35,15 @@ You can create a postgresql superuser at launch by specifying `DB_USER` and
 `DB_PASS` variables. You may also create a database by using `DB_NAME`.
 
     docker run --name postgresql -d \
+    -e 'DB_USER=username' \
+    -e 'DB_PASS=ridiculously-complex_password1' \
+    -e 'DB_NAME=my_database' \
+    <yourname>/zabbix-db-postgresql
+
+When you want to use a data container run the following command:
+
+    docker run --name postgresql -d \
+    --volumes-from pgdata \
     -e 'DB_USER=username' \
     -e 'DB_PASS=ridiculously-complex_password1' \
     -e 'DB_NAME=my_database' \
