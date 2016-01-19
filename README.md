@@ -49,6 +49,8 @@ When you want to use a data container run the following command:
     -e 'DB_NAME=my_database' \
     <yourname>/zabbix-db-postgresql
 
+NOTE: best use my prepared data container: blackcobra1973/docker-postgresql-data
+
 To connect to your database with your newly created user:
 
     psql -U username -h $(docker inspect --format {{.NetworkSettings.IPAddress}} postgresql)
